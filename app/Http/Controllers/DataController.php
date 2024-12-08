@@ -91,4 +91,36 @@ class DataController extends Controller
         // Redirect with a success message
         return redirect()->route('add-data.form')->with('success', 'Data added successfully.');
     }
+
+    public function showChart()
+{
+    // Fetch the data from the population table (you can modify this query as needed)
+    $populations = Population::join('towns', 'populations.townid', '=', 'towns.id')
+        ->select('towns.tname', 'populations.ryear', 'populations.total')
+        ->get();
+
+    // Group the data by year and town and store it in a proper structure
+    $years = $populations->pluck('ryear')->unique();
+    $townNames = $populations->pluck('tname')->unique();
+
+    $popData = [];
+
+    // Build a 2D array for population data (indexed by year and town)
+    foreach ($years as $year) {
+        foreach ($townNames as $town) {
+            $townPop = $populations->where('ryear', $year)->where('tname', $town)->first();
+            $popData[$year][$town] = $townPop ? $townPop->total : 0;
+        }
+    }
+
+    // Pass the data to the view
+    return view('population-chart', compact('popData', 'years', 'townNames'));
+}
+
+    
+    
+
+
+
+
 }

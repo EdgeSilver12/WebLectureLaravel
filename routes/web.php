@@ -35,3 +35,5 @@ Route::get('/add-data', [DataController::class, 'showAddForm'])->name('add-data.
 
 // Handle the form submission and save the data
 Route::post('/add-data', [DataController::class, 'storeData'])->name('add-data.store');
+
+Route::get('/population-chart', [DataController::class, 'showChart'])->name('population.chart');
