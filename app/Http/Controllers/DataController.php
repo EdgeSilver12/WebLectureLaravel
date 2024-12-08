@@ -9,17 +9,17 @@ use Illuminate\Http\Request;
 
 class DataController extends Controller
 {
-    // Show the form with dropdowns and radio buttons
+    // Show the form to retrieve data (from the previous task)
     public function showForm()
     {
-        // Retrieve all counties and towns for dropdowns
+        // Retrieve necessary data for the form (e.g., counties and towns)
         $counties = County::all();
         $towns = Town::all();
         
         return view('retrieve-data.form', compact('counties', 'towns'));
     }
 
-    // Handle the form submission
+    // Handle the form submission and display the result (from the previous task)
     public function handleForm(Request $request)
     {
         // Validate the form input
@@ -56,5 +56,39 @@ class DataController extends Controller
         $results = $query->get();
 
         return view('retrieve-data.results', compact('results'));
+    }
+
+    // Show the form to add new data
+    public function showAddForm()
+    {
+        // Retrieve necessary data for the form (e.g., counties and towns)
+        $counties = County::all();
+        $towns = Town::all();
+
+        return view('add-data.form', compact('counties', 'towns'));
+    }
+
+    // Handle the form submission and store the new data
+    public function storeData(Request $request)
+    {
+        // Validate the incoming data
+        $request->validate([
+            'county' => 'required|exists:counties,id',
+            'town' => 'required|exists:towns,id',
+            'year' => 'required|integer',
+            'women' => 'required|integer',
+            'total' => 'required|integer',
+        ]);
+
+        // Store the new population data
+        Population::create([
+            'townid' => $request->town,
+            'ryear' => $request->year,
+            'women' => $request->women,
+            'total' => $request->total,
+        ]);
+
+        // Redirect with a success message
+        return redirect()->route('add-data.form')->with('success', 'Data added successfully.');
     }
 }

@@ -29,3 +29,9 @@ Route::get('/retrieve-data', [DataController::class, 'showForm'])->name('retriev
 
 // Handle the form submission and display the result
 Route::post('/retrieve-data', [DataController::class, 'handleForm'])->name('retrieve-data.handle');
+
+// Display the form to add new data
+Route::get('/add-data', [DataController::class, 'showAddForm'])->name('add-data.form');
+
+// Handle the form submission and save the data
+Route::post('/add-data', [DataController::class, 'storeData'])->name('add-data.store');
