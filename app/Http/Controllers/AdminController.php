@@ -19,6 +19,9 @@ class AdminController extends Controller
                 return view('admin.index'); // Redirect to admin panel
             }
         }
+        else{
+            redirect()->back();
+        }
 
         return redirect()->route('login'); // Redirect to login if not authenticated
     }
